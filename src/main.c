@@ -37,7 +37,7 @@ void exit_init(void) {
 }
 
 // 外部中断0(KEY3)
-void INT1_ISR() __interrupt(0) {
+void INT1_ISR(void) __interrupt(0) {
     delay_10us(1000); 
     if (KEY3 == 0) {
         delay_10us(1000);  // 再消抖
@@ -212,6 +212,7 @@ void mode_3_display(void)
     seconds = 0;
     countdown_active = 0;
     beep_played = 1;  // 进入时设为1，防止蜂鸣
+    reset_countdown_finished(); // 重置倒计时完成标志
     
     lcd1602_show_string(0, 0, "CountDown Timer ");
     lcd1602_show_string(0, 1, "00:00           "); 
@@ -264,33 +265,39 @@ void mode_3_display(void)
             }
         }
         
-        // 格式化时间显示
-        time_str[0] = (minutes / 10) + '0';
-        time_str[1] = (minutes % 10) + '0';
-        time_str[2] = ':';
-        time_str[3] = (seconds / 10) + '0';
-        time_str[4] = (seconds % 10) + '0';
-        
-        // 倒计时激活且CNT可见时显示CNT
-        if (countdown_active && cnt_visible)
-        {
-            time_str[5] = ' ';
-            time_str[6] = 'C';
-            time_str[7] = 'N';
-            time_str[8] = 'T';
+        // 检查倒计时是否完成
+        if (is_countdown_finished()) {
+            // 显示"It's Time!"
+            lcd1602_show_string(0, 1, "It's Time!      ");
+        } else {
+            // 格式化时间显示
+            time_str[0] = (minutes / 10) + '0';
+            time_str[1] = (minutes % 10) + '0';
+            time_str[2] = ':';
+            time_str[3] = (seconds / 10) + '0';
+            time_str[4] = (seconds % 10) + '0';
+            
+            // 倒计时激活且CNT可见时显示CNT
+            if (countdown_active && cnt_visible)
+            {
+                time_str[5] = ' ';
+                time_str[6] = 'C';
+                time_str[7] = 'N';
+                time_str[8] = 'T';
+            }
+            else
+            {
+                time_str[5] = ' ';
+                time_str[6] = ' ';
+                time_str[7] = ' ';
+                time_str[8] = ' ';
+            }
+            
+            time_str[9] = '\0';
+            
+            // 显示时间和CNT
+            lcd1602_show_string(0, 1, time_str);
         }
-        else
-        {
-            time_str[5] = ' ';
-            time_str[6] = ' ';
-            time_str[7] = ' ';
-            time_str[8] = ' ';
-        }
-        
-        time_str[9] = '\0';
-        
-        // 显示时间和CNT
-        lcd1602_show_string(0, 1, time_str);
         
         // 倒计时完成时蜂鸣
         if (minutes == 0 && seconds == 0 && !countdown_active)

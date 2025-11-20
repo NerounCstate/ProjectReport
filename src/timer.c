@@ -8,6 +8,7 @@
 u16 minutes = 0;
 u16 seconds = 0;
 u8 countdown_active = 0;  // 倒计时是否激活的标志
+u8 countdown_finished = 0; // 倒计时完成标志
 
 /*******************************************************************************
 * 函 数 名         : timer0_init
@@ -62,6 +63,7 @@ void timer0_isr(void) __interrupt(1)
 		{
 			// 停止倒计时
 			countdown_active = 0;
+			countdown_finished = 1; // 设置倒计时完成标志
 		}
 	}
 }
@@ -144,6 +146,7 @@ void time_control(void)
 			// 播放三声短暂的mi音
 			for(int i = 0; i < 3; i++)
 			{
+				lcd1602_show_string(0, 1, "It's Time!      ");
 				play_mi_sound();
 				delay_ms(500);  // 声音之间间隔500ms
 			}
@@ -218,4 +221,26 @@ void set_time(u16 m, u16 s)
 u8 is_countdown_active(void)
 {
 	return countdown_active;
+}
+
+/*******************************************************************************
+* 函 数 名         : is_countdown_finished
+* 函数功能		   : 检查倒计时是否已完成
+* 输    入         : 无
+* 输    出         : 倒计时完成状态（1=已完成，0=未完成）
+*******************************************************************************/
+u8 is_countdown_finished(void)
+{
+	return countdown_finished;
+}
+
+/*******************************************************************************
+* 函 数 名         : reset_countdown_finished
+* 函数功能		   : 重置倒计时完成标志
+* 输    入         : 无
+* 输    出         : 无
+*******************************************************************************/
+void reset_countdown_finished(void)
+{
+	countdown_finished = 0;
 }
