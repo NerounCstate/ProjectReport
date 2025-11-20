@@ -113,9 +113,9 @@ ReportWork/
 | LED3 | P2.2 |
 | LED4 | P2.3 |
 | LED5 | P2.4 |
-| LED6 | P1.0 |
-| LED7 | P1.1 |
-| LED8 | P1.2 |
+| LED6 | P2.5 |
+| LED7 | P2.6 |
+| LED8 | P2.7 |
 
 ### 音频输出
 | 功能 | 管脚 |
@@ -134,35 +134,18 @@ ReportWork/
 - ✅ 创建字符串工具库：统一时间和浮点数格式化
 - ✅ 添加配置头文件：集中管理系统常数
 
-### 2. 硬件管脚优化
-- ✅ 修复LED和BEEP管脚冲突
-- ✅ 将LCD_E重命名为LCD_EN避免枚举冲突
-- ✅ 重新分配LED6、LED7、LED8到P1口
 
-### 3. 驱动优化
+### 2. 驱动优化
 - ✅ 改进DS18B20通信超时处理
 - ✅ 优化LCD显示性能
 - ✅ 改进矩阵按键扫描算法
 
-### 4. 代码规范
+### 3. 代码规范
 - ✅ 规范化变量命名和格式
 - ✅ 统一代码风格和缩进
 - ✅ 添加详细的函数文档注释
 
 ## 编译和烧录
-
-### 使用 PlatformIO
-
-```bash
-# 编译项目
-platformio run -e STC89C52RC
-
-# 烧录到设备
-platformio run -e STC89C52RC --target upload
-
-# 清除编译产物
-platformio run -e STC89C52RC --target clean
-```
 
 ### 编译选项说明
 - `-Os`：优化代码大小，适合嵌入式系统
@@ -211,7 +194,7 @@ void float_to_string(u8 *str, float value, u8 decimal_places);
 ```c
 void play(void);
 ```
-功能：播放完整的春日野穹主题曲
+功能：播放完整的春日影
 
 #### haruhikage()
 ```c
@@ -274,5 +257,5 @@ A: 验证LED管脚配置和供电连接
 
 ---
 
-**最后更新**：2024年11月  
+**最后更新**：2025年11月  
 **支持平台**：PlatformIO + STC89C52RC
